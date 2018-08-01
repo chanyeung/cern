@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<style>
+#wrapper{
+	width : 440px;
+	height : 120px;
+	/*실선 solid*/
+	border : 2px solid skyblue;
+	margin : auto;/*화면중앙으로 정렬*/
+}
+#top{
+	width : 100%;
+	height : 20%;
+	/*background : green;*/
+}
+#down{
+	width : 100%;
+	height : 70%;
+	/*background : pink;*/
+}
+#sel{
+	width : 380px;
+	height : 40px;
+	/*background : pink;*/
+	vertical-align : top;
+	front-weight : bold;
+	front-size : 20pt;
+}
+
+#disk{
+	width : 40px;
+	height : 40px;
+}
+/*스타일 시트의 선택자에 .점을 찍어서 클래스를 정의할 수있다.*/
+.bt_style{
+	width : 40px;
+	height : 20px;
+}
+</style>
+<script>
+var r = 0;	//디스크크림의 각도를 누적할 전역변수!
+var step = 0;	//몇도씩 움직일지 결정
+var audio;	//이변수는 프로그램이 끝날때까지 유지되어야 하므로 전역변수로 선언, 모든 함수에서 이 함수를 사용할수있다.
+var sel;
+
+//프로그램이 가동되면, audio를 준비해놓자!
+function init(){
+	audio = document.createElement("audio");	//audio변수는 전역변수로 선언해야한다
+	//audio.src = "../music/girl.mp3";
+	sel = document.getElementById("sel");
+	audio.src = "./music/"+sel.value;
+	/*audio.play();*/
+
+	//각 이미지 버튼에 이벤트 리스너 연결
+	var previous = document.getElementById("previous");
+	var stop = document.getElementById("stop");
+	var play = document.getElementById("play");
+	var next = document.getElementById("next");
+
+	previous.addEventListener("click",function(){});
+	stop.addEventListener("click",function(){
+		step = 0;
+		audio.pause();	//재생중인 오디오 중단
+	});
+	
+	play.addEventListener("click",function(){
+		//다시 디스크 움직이게...
+		step = 50;
+		audio.play();
+	});
+	
+	next.addEventListener("click",function(){});
+	
+	setInterval("diskAni()",50);	//setTimeout과 동일하나, 현재 함수가 아닌 외부의 함수 호출이 가능
+}
+//디스크 돌리는 기능
+function diskAni(){
+	var disc = document.getElementById("disk");
+	disk.style.transform = "rotate("+r+"deg)";
+	r+=step;	//10도 회전
+}
+
+//사용자가 현재 음원을 바꾸면, 적용되게 처리..
+function setFile(){
+	//select 박스의 음원에 대한 정보가 정보창에 출력되도록 처리
+	var subject = document.getElementById("subject");
+	subject.innerText = document.getElementById("sel").value;
+
+	//갱신된 오디오 정보를 적용하자
+	audio.src = "./music/"+sel.value;
+	
+	//재생중인 음악이 있다면 멈췄다가
+	audio.pause();
+}
+</script>
+</head>
+<body onLoad = "init()">
+<!-- 화면분할은 div   -->
+<div id = "wrapper">
+	<div id ="top">
+		<marquee id ="subject">찬영이가 좋아하는~뮤직</marquee>
+	</div>
+	<div id ="down">
+		<select id = "sel" onChange = "setFile()">
+			<option value ="weDontTalkAnymore.m4a">We Don`t Talk Anymore (Feat. Selena Gomez) - Charlie Puth</option>
+			<option value ="theCrush.m4a">The Crush - Sunshine State</option>
+			<option value ="isThisLove.m4a">이게 사랑일까 (Feat. 하은) - 커피소년</option>
+			<option value ="stayAway.m4a">Stay Away (With 예슬) - 스탠딩 에그</option>
+			<option value ="TakeAPicture.m4a">Take A Picture - Carly Rae Jepsen</option>
+			<option value ="ratherBe.m4a">Rather Be (feat. Jess Glynne) - Clean Bandit</option>
+		</select>
+		<img src = "./images/disc.png" id ="disk">
+		
+		<p>
+		<img id = "previous" src = "./images/previous.png" class ="bt_style">
+		<img id = "stop" src = "./images/stop.png" class ="bt_style">
+		<img id = "play" src = "./images/play.png" class ="bt_style">
+		<img id = "next" src = "./images/next.png" class ="bt_style">
+	</div>
+</div>
+
+</body>
+</html>
