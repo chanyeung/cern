@@ -12,59 +12,94 @@
 
   gtag('config', 'UA-123178636-1');
 </script>
-	
+
+<style>
+body{
+	margin:0;
+}
+h1{
+	font-size : 45px;
+	text-align : center;
+	border-bottom:1px solid gray;
+	margin:0;
+	padding:20px;
+}
+ul{
+	border-right:1px solid gray;
+	width:200px;
+	margin:0;
+	padding : 15px;
+}
+#grid{
+	display:grid;
+	grid-template-columns: 250px 1fr;
+}
+
+#contents{
+}
+
+
+</style>
 </head>
 
 <body>
 <h1><a href="index.html"><img src="./images/home.png">HOME</a></h1>
-<ul>
-	<li>Develop</li>
-	<ol>
-		<li><a href="html.html">HTML</a></li>
-		<li><a href="./chess_change10/Chess.html">체스 게임</a></li>
-		<li><a href="musicPlayer.html">음악 감상</a></li>
-	</ol>
 
-	<li>Hobby-Weight Training</li>
-	<ol>
-		<li><a href="sholder.html">[sholder] 어깨</a></li>
-		<li><a href="back.html">[back] 등</a></li>
-		<li><a href="chest.html">[chest] 가슴</a></li>
-		<li><a href="leg.html">[leg] 하체</a></li>
-	</ol>
-<ul>
+<div id="grid">
+	<ul>
+		<li>Develop</li>
+		<ol>
+			<li><a href="html.html">HTML</a></li>
+			<li><a href="./chess_change10/Chess.html">체스 게임</a></li>
+			<li><a href="musicPlayer.html">음악 감상</a></li>
+		</ol>
 
-찬영이의 html 웹 페이지 방문을 환영합니다.^ ^
+		<li>Hobby-Weight Training</li>
+		<ol>
+			<li><a href="sholder.html">[sholder] 어깨</a></li>
+			<li><a href="back.html">[back] 등</a></li>
+			<li><a href="chest.html">[chest] 가슴</a></li>
+			<li><a href="leg.html">[leg] 하체</a></li>
+		</ol>
+	</ul>
 
-<p>
-<div id="disqus_thread"></div>
-<script>
+	<div id = "contents">
+		<p>
+			찬영이의 html 웹 페이지 방문을 환영합니다.^ ^
 
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-/*
-var disqus_config = function () {
-this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-*/
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://chanyeung.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</p>
+			<br>
+			how to use muscle??
+			<br>
+			근육은 어떻게 사용할까요?
+		</p>
+	
+		<p>
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/2fy7zMVkTfU?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+		</p>
 
+		<p>
+		<div id="disqus_thread"></div>
+		<script>
+		/**
+		*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+		*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+		/*
+		var disqus_config = function () {
+		this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+		this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+		};
+		*/
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+		s.src = 'https://chanyeung.disqus.com/embed.js';
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+		</script>
 
-<p>
-<h3>how to use muscle??<br>
-근육은 어떻게 사용할까요?
-</h3>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/2fy7zMVkTfU?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</p>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		</p>
+	</div>
+</div>
 </body>
 </html>
