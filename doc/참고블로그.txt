@@ -1,0 +1,84 @@
+redmine.nemomall.co.kr
+
+mysql 사용자 계정 생성 및 권한 부여
+http://ubasti.tistory.com/5
+
+db 및 테이블 만들기
+create table study(
+primary_key bigint(20) unsigned AUTO_INCREMENT primary key,
+user_id varchar(30) unique not null,
+user_pass varchar(255) not null,
+user_name varchar(30) not null,
+user_job varchar(50) not null,
+user_sex varchar(10) check(sexMF in('M','F')),
+reg_date datetime not null DEFAULT CURRENT_TIMESTAMP
+);
+
+
+Q. $ sudo a2enmod php7
+ERROR: Module php7 does not exist!
+A. $ sudo apt-get install libapache2-mod-php7.0
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> GRANT ALL PRIVILEGES ON DBName.* TO 'userID'@'localhost'
+
+mysql> GRANT ALL PRIVILEGES ON DBName.* TO 'userID'@'%' 
+
+mysql> GRANT ALL PRIVILEGES ON DBName.tableName TO 'userID'@'localhost'
+
+mysql> GRANT ALL PRIVILEGES ON DBName.tableName TO 'userID'@'%'
+
+출처: http://ubasti.tistory.com/5 [초보 개발자 삽질 일기]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

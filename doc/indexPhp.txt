@@ -1,0 +1,65 @@
+//mysqli 연결
+$conn1=mysqli_connect("localhost", "local_user1","cjfckd99","pcy_db");
+                //host, user, password, dbname
+$conn2=mysqli_connect("%","remote_access_user1","cjfckd99", "pcy_db");
+/*연결 확인*/
+if(mysqli_connect_errno()){
+        printf("connect failed : %s\n", mysqli_connect_error());
+        exit();
+}
+
+$user_name='Welcom title variable';
+$description='Hello,Web';
+if(isset($_GET['user_id'])){
+        echo "눌렀어?";
+        $sql = "select * from study where user_id={$_GET['user_id']}";
+        $result=mysqli_query($conn1, $sql);
+        $row = mysqli_fetch_array($result);
+        $user_name=$row['user_name'];
+        $description=$row['description'];
+}
+$sql="select * from study";
+$result=mysqli_query($conn1, $sql);
+$list = '';
+echo $list;
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>찬영사원페이지</title>
+</head>
+<body>
+<h1><a href="second.php">WEB</a></h1>
+<h1>어서오세요</h1>
+
+<p class="user_info">
+
+</p>
+
+<p class="user_list">
+<h2>사용자 목록</h2>
+<?php
+while($row=mysqli_fetch_array($result)){
+        $list = $list."<li><a href=\"index.php?id={$row['user_id']}\">
+        {$row['user_name']}</a></li>";
+}
+echo $list;
+?>
+</p>
+
+<?php
+if(isset($_POST['save'])){
+        $sql = "insert into study(user_id, user_pass, user_name, user_job,usersex) values(?,?,?,?,?)";
+        $stmt = mysqli_prepare($sql);
+        //"parameters","retrun
+        // integer->i,
+        // double ->d,
+        // string ->s,
+        // blob   ->b
+        $stmt->bind_param("sssss",$_POST['user_id', ,$_POST['user_',,$_POST['user_id',,$_POST['user_id',$_POST['user_id']
+}
+?>
+
+<p class="user_form">
+<form method="post">
