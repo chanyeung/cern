@@ -1,9 +1,9 @@
 redmine.nemomall.co.kr
 
-mysql »ç¿ëÀÚ °èÁ¤ »ı¼º ¹× ±ÇÇÑ ºÎ¿©
+mysql ì‚¬ìš©ì ê³„ì • ìƒì„± ë° ê¶Œí•œ ë¶€ì—¬
 http://ubasti.tistory.com/5
 
-db ¹× Å×ÀÌºí ¸¸µé±â
+db ë° í…Œì´ë¸” ë§Œë“¤ê¸°
 create table study(
 primary_key bigint(20) unsigned AUTO_INCREMENT primary key,
 user_id varchar(30) unique not null,
@@ -18,6 +18,29 @@ reg_date datetime not null DEFAULT CURRENT_TIMESTAMP
 Q. $ sudo a2enmod php7
 ERROR: Module php7 does not exist!
 A. $ sudo apt-get install libapache2-mod-php7.0
+
+Q. /var/www/html -> /home/pcy/www/html
+A. 1.  cd /etc/apache2
+        vim apache2.conf
+        
+        <Directory /var/www/>
+              Options Indexes FollowSymLinks
+              AllowOverride None
+              Require all granted
+        </Directory>
+        <Directory /var/www/html> ì´ë¶€ë¶„ì„ <Directory /home/pcy/www/html>
+        
+   2.   cd /etc/apache2/sites-available
+        vim 000-default.conf
+        
+        DocumentRoot /var/www/html ì´ë¶€ë¶„ì„ /home/pcy/www/html
+        
+   3.   $ sudo service apache2 restart
+
+Q ìš°ë¶„íˆ¬, ë””ë ‰í† ë¦¬ ì‚­ì œ
+A  rm -r ì‚­ì œí•  ë””ë ‰í† ë¦¬
+
+
 
 
 
@@ -38,7 +61,7 @@ mysql> GRANT ALL PRIVILEGES ON DBName.tableName TO 'userID'@'localhost'
 
 mysql> GRANT ALL PRIVILEGES ON DBName.tableName TO 'userID'@'%'
 
-ÃâÃ³: http://ubasti.tistory.com/5 [ÃÊº¸ °³¹ßÀÚ »ğÁú ÀÏ±â]
+ì¶œì²˜: http://ubasti.tistory.com/5 [ì´ˆë³´ ê°œë°œì ì‚½ì§ˆ ì¼ê¸°]
 
 
 
