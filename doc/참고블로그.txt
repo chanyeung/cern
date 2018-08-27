@@ -40,12 +40,68 @@ A. 1.  cd /etc/apache2
 Q 우분투, 디렉토리 삭제
 A  rm -r 삭제할 디렉토리
 
+Q. how to vim tab to space4
+A. cd /home
+   vim .vimrc
+   
+   filetype plugin indent on
+   set tabstop=4
+   set shiftwidth=4
+   set expandtab
 
+Q. get방식으로 row[column]가져오기
+if(isset($_GET['user_id'])){
+        $sql = "select * from study where user_id='{$_GET['user_id']}'";
+        echo $sql;
+        $result=mysqli_query($conn, $sql);
+        echo "<br>result=";
+        var_dump($result);
 
+        //check mysqli_error
+        //echo mysqli_error($conn1, $sql);
+        if($result===false){
+                echo mysqli_error($conn);
+        }
 
+        $row = mysqli_fetch_array($result);
+        echo "<br>.\$row.=";
+        var_dump($row);
 
+        $user_id=$row['user_id'];
+        $user_name=$row['user_name'];
+        $user_job=$row['user_job'];
+        $user_sex=$row['user_sex'];
+        $reg_date=$row['reg_date'];
+        echo "<br>user_name=";
+        var_dump($user_name);
 
+        //echo "여기에 누른 사용자정보가 나와야되!";
+        echo "<br>print_user=";
+        echo $user_id;
+        echo $user_name;
+        echo $user_job;
+        echo $user_sex;
+        echo $user_date;
 
+}else{
+        printf("사용자를 클릭하면 GET방식으로 사용자 정보가 보이도록해야됨.");
+}
+mysqli_query -> mysqli_fetch_array ->  $row['user_id'];
+*mysql함수와 mysqli함수를 혼용해서 사용하지 않도록, 
+$row[0]<=MYSQL_NUM 리턴타입
+$row["user_id"], $row['user_id'] <= MYSQL_ASSOC 리턴타입
+기본 리턴타입은 둘다 쓸수있다.
+
+Q. php.ini error 출력
+A.vi /etc/php.ini ------(위치 차이)-------> /etc/php/5.6/apache2/php.ini
+display_errors = Off -> display_errors = On
+error_reporting = E_ALL & ~E_NOTICE
+service httpd restart
+
+Q. 아파치 재시작
+A. sudo service apache2 restart
+   systemctl restart apache2
+   
 
 
 
