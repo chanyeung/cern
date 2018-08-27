@@ -101,7 +101,23 @@ service httpd restart
 Q. 아파치 재시작
 A. sudo service apache2 restart
    systemctl restart apache2
-   
+
+Q. Vim line number
+A. :set number
+
+
+update study set user_pass='333', user_name='박찬영', user_job='개발사원', user_sex='F' where user_id='hong01';
+
+
+
+
+
+
+
+
+
+
+
 
 
 
