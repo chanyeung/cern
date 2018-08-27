@@ -1,4 +1,6 @@
 redmine.nemomall.co.kr
+정규표현식 : https://regexr.com/
+
 
 mysql 사용자 계정 생성 및 권한 부여
 http://ubasti.tistory.com/5
@@ -41,7 +43,7 @@ Q 우분투, 디렉토리 삭제
 A  rm -r 삭제할 디렉토리
 
 Q. how to vim tab to space4
-A. cd /home
+A. cd /etc/vim/vimrc
    vim .vimrc
    
    filetype plugin indent on
@@ -105,8 +107,41 @@ A. sudo service apache2 restart
 Q. Vim line number
 A. :set number
 
+Q. INSERT INTO
+A. INSERT INTO t1 (a,b,c) VALUES (1,2,3)
+  ON DUPLICATE KEY UPDATE c=c+1;
 
+UPDATE t1 SET c=c+1 WHERE a=1;
+UPDATE t1 SET c=c+1 WHERE a=1 OR b=2 LIMIT 1;
 update study set user_pass='333', user_name='박찬영', user_job='개발사원', user_sex='F' where user_id='hong01';
+
+Q. HTML 태그 정보 가져오기 , disable 풀기
+A. document.getElementsByName("cad.question7.answer8")[0].disabled = false;
+
+
+Q. html 입력태그에서 받은 값을 포스트로 받아서 PHP통해서 mysql에 id값과 비교하기
+A.
+$conn=mysqli_connect("localhost", "local_user01","pcy621","pcy_db");
+
+//echo $_POST['user_id'];
+$sql = "select * from study where user_id=\"".$_POST['user_id']."\"";
+echo $sql;
+$result = mysqli_query($conn,$sql);
+$row=mysqli_fetch_array($result);
+var_dump($row['user_id']);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
