@@ -1,0 +1,14 @@
+<script>
+ 79 //중복체크를 눌렀을때, 아이디가 기존에 있는지 검사
+ 80 function checkId(){
+ 81         var inputValue = document.getElementsByName("user_id")[0].value;
+ 82         console.log(inputValue);
+ 83         document.getElementsByName("submit")[0].disabled=false;
+ 84 }
+ 85 </script>
+ 86 <p class="user_form">
+ 87 <form action="process_create.php" method="POST">
+ 88 <h4>회원 가입 및 수정 양식</h4>
+ 89 <input type="text" name="user_id" width="80%" placeholder="아이디를 입력해주세
+    요" value=<?php echo $user_id ?>> 
+ 90 <button onclick="checkId()">중복체크</button><br>
