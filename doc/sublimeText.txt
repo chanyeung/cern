@@ -1,0 +1,25 @@
+https://www.lesstif.com/pages/viewpage.action?pageId=26084359
+https://www.lesstif.com/pages/viewpage.action?pageId=9437318
+
+0. Preferences->Package Control->package Control:install Package -> 
+1. 테마 : soda설치->Settings User선택 ->
+{
+  "theme": "Soda Dark 3.sublime-theme" 
+}
+2. 한글 : ConvertToUTF8설치 -> Encoding변경 : FIle ->Set File Encoding To 에서 EUC-KR선택
+3. CMake 설치 [CMake template(CMakeLists.txt) 편집시 syntax highlighting 지원]
+4. SideBarEnhancements 설치 [Provides enhancements to the operations on Sidebar of Files and Folders for Sublime Text]
+5. ApacheConf 설치
+6. Preferences -> Settings User 선택
+//Before
+"ignored_packages":
+    [
+        "Vintage" 
+    ]
+
+//After
+"ignored_packages":
+    [
+//      "Vintage" 
+    ]
+7. Alignment
