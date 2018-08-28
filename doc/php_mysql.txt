@@ -88,7 +88,9 @@ show tables
 SHOW TABLES LIKE '테이블명';
 SHOW TABLES IN 디비명 LIKE '테이블명';
 
-
+Q. php 암호화(encrypt) & 복호화(decrypt)
+string openssl_encrypt ( string $data , string $method , string $password [, int $options = 0 [, string $iv = "" ]] )
+string openssl_decrypt ( string $data , string $method , string $password [, int $options = 0 [, string $iv = "" ]] )
 
 
 
