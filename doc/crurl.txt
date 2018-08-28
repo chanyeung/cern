@@ -1,0 +1,26 @@
+1.우분투에 curl 설치
+$ sudo apt-get install curl
+레파지토리가 주기적으로 업뎃되지 않기때문에 아래 명령어로 7.50.3을 우분투 터미널에 설치해보자
+$ wget http://curl.haxx.se/download/curl-7.50.3.tar.gz
+$ tar -xvf curl-7.50.3.tar.gz
+$ cd /home/pcy/curl-7.50.3/
+//아래는 안됨 ... 아마도 설치 잘된듯?
+[
+$ ./configure
+$ make
+$ sudo make install
+]
+
+Curl사용
+-x : 프록시 서버
+-v : 상세 데이터 표시(헤더, 바디)
+-d : 바디 데이터
+-H : 헤더 설정
+조금더 복잡한예제
+curl -x "1.2.6.2:8080"
+-v-d "{"person":{'age':13, 'sex':'female', 'tel':'111-222-3333'}}"
+-H "Host: stg.sunphiz.me"
+-H "Content-Type: text/plain" http://1.1.1.1/api/
+
+추가 사용방법
+https://www.lesstif.com/pages/viewpage.action?pageId=14745703
