@@ -16,6 +16,25 @@ user_sex varchar(10) check(sexMF in('M','F')),
 reg_date datetime not null DEFAULT CURRENT_TIMESTAMP
 );
 
+*php manual function reference (자주쓰이는 함수)
+-Date/Time -> Date/Time 함수목록 -> Date
+-파일 시스템 관련 확장 ->파일시스템 -> 
+-이미지 처리와 생성->GD : 주로 이미지를 처리할 때
+-Mail Related Extensions -> Mail
+-Mathematical Extensions -> Math : 반올림, 제곱근
+-Session Extensions -> Session : Session Handling 로그인과 관련된 부분
+-Text Porcessing -> PCRE[정규표현식, Perl-Compatible]
+                 -> POSIX Reges [정규표현식, POSIX Extended]
+                 -> Strings[문자열]
+-Variable and Type Related Extensions -> Arrays : 배열
+                                      -> Classes/Object : 객체지향에 필요한함수들
+-XML Manipulation -> DOM
+                     SimplerXML
+-Database Extensions -> Vendor Specific Database Extensions[회사별로 나타낸곳에서 MYSQL을 찾아]-> 
+        mysqli 는 improve개선된 함수들 핸들링하는 방법입니다.
+
+
+
 
 Q. $ sudo a2enmod php7
 ERROR: Module php7 does not exist!
