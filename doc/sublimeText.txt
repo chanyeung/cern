@@ -28,8 +28,58 @@ https://www.lesstif.com/pages/viewpage.action?pageId=9437318
 한글설정
 설치할때 cd로 이동한곳에 sublime-text-imfix가 설치되니 주의[회사 컴은 /home/pcy/www/html에 설치되었다.]
 
+컴파일을 위해 관련 패키지들을 install 한다.
 sudo apt-get install fcitx fcitx-hangul build-essential libgtk2.0-dev
 git clone https://github.com/lyfeyaj/sublime-text-imfix.git
-cd sublime-text-imfix
-./sublime-imfix
-로그아웃 / 로그인 후 확인
+
+그리고 src로 이동하여 빌드를 수행한다.
+cd sublime-text-imfix/src
+gcc -shared -o libsublime-imfix.so sublime-imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC
+
+이렇게 컴파일을 하면 libsublime-imfix.so파일이 나오는데, 이 파일을 sublime-text가 설치된 디렉토리에 복사 해 준다.
+sublime-text를 설치하는 방법은 두 가지가 있는데, deb 패키지 파일을 받아서 설치하는 경우와 직접 tar 파일을 받아서 압축 해제로 설치하는 경우이다.
+본인은 deb패키지를 이용하여 설치 하였다.
+lib 디렉토리를 생성한 후 복사한다.
+sudo mkdir /opt/sublime_text/lib
+sudo cp libsublime-imfix.so /opt/sublime_text/lib
+
+lib 디렉토리를 생성한 후 복사한다
+sudo mkdir /opt/sublime_text/lib
+sudo cp libsublime-imfix.so /opt/sublime_text/lib
+
+그리고 sublime_text_k 파일을 만들고 아래와 같이 입력한다.
+cd /opt/sublime_text
+sudo vi sublime_text_k
+
+#!/bin/sh
+export LD_PRELOAD=/opt/sublime_text/lib/libsublime-imfix.so
+/opt/sublime_text/sublime_text "$@"
+
+이 파일을 런처에 등록한다.
+cd /usr/share/applications
+sudo vi sublime_text_k.desktop
+ 
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Sublime Text (KOR)
+GenericName=Text Editor
+Comment=Sophisticated text editor for code, markup and prose
+Exec=/opt/sublime_text/sublime_text_k %F
+Terminal=false
+MimeType=text/plain;
+Icon=sublime-text
+Categories=TextEditor;Development;
+StartupNotify=true
+StartupWMClass=Sublime_text
+Actions=Window;Document;
+ 
+[Desktop Action Window]
+Name=New Window
+Exec=/opt/sublime_text/sublime_text_k -n
+OnlyShowIn=Unity;
+ 
+[Desktop Action Document]
+Name=New File
+Exec=/opt/sublime_text/sublime_text_k --command new_file
+OnlyShowIn=Unity;
