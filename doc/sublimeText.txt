@@ -23,3 +23,13 @@ https://www.lesstif.com/pages/viewpage.action?pageId=9437318
 //      "Vintage" 
     ]
 7. Alignment
+
+
+한글설정
+설치할때 cd로 이동한곳에 sublime-text-imfix가 설치되니 주의[회사 컴은 /home/pcy/www/html에 설치되었다.]
+
+sudo apt-get install fcitx fcitx-hangul build-essential libgtk2.0-dev
+git clone https://github.com/lyfeyaj/sublime-text-imfix.git
+cd sublime-text-imfix
+./sublime-imfix
+로그아웃 / 로그인 후 확인
