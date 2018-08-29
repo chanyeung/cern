@@ -24,3 +24,52 @@ curl -x "1.2.6.2:8080"
 
 추가 사용방법
 https://www.lesstif.com/pages/viewpage.action?pageId=14745703
+
+Q. php curl을 통해 스크랩하기
+A. 
+<?php
+	//create a new cURL resource
+	$ch = curl_init("https://www.ticketmonster.co.kr/deal/1450043222?reason=er&etype=nc&useArtistchaiRegion=Y");
+	//set URl and other appropriate options
+	//curl_setopt($ch, CURLOPT_URL, "http:/pcy.nemo/butter/home.php");	//the URL to fetch. this can also be set when initialzing a session with curl_init().
+	//curl_setopt($ch, CURLOPT_HEADER, false);	//true to include the header in the output
+	curl_setopt($ch, CURLOPT_POST, TRUE);		//true to do a reqular HTTP POST. This POST is the normal application/xwww-form unlencoded kind, most commonly used by forms.
+	curl_setopt($ch, CURLOPT_HEADER, true);
+	//grab URL and pass it to the browser
+	$page=curl_exec($ch);
+
+	if(curl_errno($ch))	//check for execution errors
+	{
+		echo 'Scrapper error : ' . curl_error($ch);
+		// exit;
+		echo '<br>';
+	}
+
+	//close curl resuorce, and free up system resources
+	curl_close($ch);
+
+	$regex = '/<span.*<\/span>/im';
+	// $regex = '/^<div.*>[\w\W]*<\/div>$/im';
+	if(preg_match($regex, $page, $list)){
+	//if(preg_match_all($regex, $page, $list)){
+		echo $list[0];
+	}else{
+		echo "Not found";
+	}
+?>
+
+Q. header와 body를 구분하여 body만 스크랩하기
+A. $ch = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_VERBOSE, 1);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+// ...
+$response = curl_exec($ch);
+
+// Then, after your curl_exec call:
+$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$header = substr($response, 0, $header_size);
+$body = substr($response, $header_size);
+
+Q. 쇼핑몰 홈페이지에서 카테고리 종류들 가져오기
+A:
