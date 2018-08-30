@@ -1,0 +1,78 @@
+<?php
+/*explode 는 문자열을 문자열로 나눕니다.
+ *-설명 : array explode(string $delimiter, string $string[,int $limit])
+ * delimiter 문자열을 경계로 나누어진 string의 문자열로 이루어지는 배열을 반환합니다.
+ *-인수 :
+ delimte 경계문자열.
+ string 입력 문자열
+ limit를 지정하면, 반환하는 배열은 최대 limit개의 원소를 가지며, 마지막 원소는 남은 string모두를 포함합니다.
+ *-반환값 : delimiter가 빈 문자열("")dlaus, explode()은 False를 반환합니다. delimiter가 string에 존재하지 않으면, explode()는 string을 포함하는 배열을 반환합니다.
+ */
+
+/*
+timon category
+<button id="_btnShowCategoryList" ~ <div id="_popularWrap"
+*/
+$ch = curl_init("https://www.ticketmonster.co.kr/deal/1450043222?reason=er&etype=nc&useArtistchaiRegion=Y");
+//$ch = curl_init("https://www.ticketmonster.co.kr/");
+
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_VERBOSE, 1);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+
+$response=curl_exec($ch);
+
+if(curl_errno($ch))	//check for execution errors
+{
+	echo 'Scrapper error : ' . curl_error($ch);
+	// exit;
+	echo '<br>';
+}
+
+//Then, after your curl_exec call;
+$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$header = substr($response, 0, $header_size);
+$body = substr($response, $header_size);
+
+//split to BODY, result = $tailCutBody
+$headCutBody = explode("id=\"gnb2\"", $body);
+$tailCutBody = explode("div class=\"popular\"", $headCutBody[1]);
+preg_match_all('/<h3[^>]*class=\"title\"[^>]*>(.*)<\/h3>/im', $tailCutBody[0], $category1);	//extract 1st category
+
+//split to 1depth BODY with <div class="depth", regular expration=<div[\w\s]class[\s]?=[\s]*\"depth\"[^>]*>
+preg_match("/<div[\w\s]class[\s]?=[\s]*\"depth\"[^>]*>/im", $tailCutBody[0], $delimiter);	//set explode determine
+$splBody = explode($delimiter[0], $tailCutBody[0]);		//final explode, result paragraph : $sqlBody Array[1]~[9]
+
+//etract 2nd category[1]
+preg_match_all("/ord\s*=\s*\"(\d{2})000000\"[^>]*>\s*<span[^>]*>(.*?)<\/span>/im", $tailCutBody[0], $category2);
+
+//etract 3nd category[1]
+//preg_match_all("/ord\s*=\s*\"(\d{4}0000)\"[^>]*>\s*(.*?)<\/a>/im", $tailCutBody[0], $category3);
+
+$category['text'] =  $category2[2];
+$category['value']=  $category2[1];
+
+//etract 3nd category[1]
+preg_match_all("/ord\s*=\s*\"(\d{2})\d{2}0000\"[^>]*>\s*([^<]*?)<\/a>/im", $tailCutBody[0], $category3);
+
+for ($i=0; $i <count($category3[1]); $i++) { 
+	$index=array_search($category3[1][$i], $category[value]);
+	$category3['cat2'][$i]=$category['text'][$index];
+}
+
+$result['cat2']=$category3['cat2'];
+$result['cat3']=$category3[2];
+
+// echo "<xmp>";
+// // print_r($tailCutBody[0]);
+// // print_r($category1);
+//  //print_r($category);
+//  print_r($result);
+// echo "</xmp>";
+echo "Second catalog 	Third catalog<br>";
+for ($i=0; $i < count($result['cat2']); $i++) { 
+	echo $result['cat2'][$i] . "\t" . "\t";
+	echo $result['cat3'][$i] . "<br>";
+}
+
+?>
