@@ -1,0 +1,122 @@
+<?php
+/*explode 는 문자열을 문자열로 나눕니다.
+ *-설명 : array explode(string $delimiter, string $string[,int $limit])
+ * delimiter 문자열을 경계로 나누어진 string의 문자열로 이루어지는 배열을 반환합니다.
+ *-인수 :
+ delimte 경계문자열.
+ string 입력 문자열
+ limit를 지정하면, 반환하는 배열은 최대 limit개의 원소를 가지며, 마지막 원소는 남은 string모두를 포함합니다.
+ *-반환값 : delimiter가 빈 문자열("")dlaus, explode()은 False를 반환합니다. delimiter가 string에 존재하지 않으면, explode()는 string을 포함하는 배열을 반환합니다.
+ */
+
+/*
+timon category
+<button id="_btnShowCategoryList" ~ <div id="_popularWrap"
+*/
+$ch = curl_init("https://www.ticketmonster.co.kr/deal/1450043222?reason=er&etype=nc&useArtistchaiRegion=Y");
+//$ch = curl_init("https://www.ticketmonster.co.kr/");
+
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_VERBOSE, 1);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+
+
+//check for execution errors
+if(!$response=curl_exec($ch))
+{
+	echo 'Scrapper error : ' . curl_error($ch);
+	exit;
+}
+
+//extract body(exclude header)		Then, after your curl_exec call;
+$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$body = substr($response, $header_size);
+
+//split to BODY, result $bodyCat = $tailCutBody[0]
+$headCutBody = explode("id=\"gnb2\"", $body);
+$tailCutBody = explode("div class=\"popular\"", $headCutBody[1]);
+$bodyCat = $tailCutBody[0];
+preg_match_all('/<h3[^>]*class=\"title\"[^>]*>(.*)<\/h3>/im', $bodyCat, $category1);	//extract 1st category
+
+//split to 1depth BODY with <div class="depth", regular expration=<div[\w\s]class[\s]?=[\s]*\"depth\"[^>]*>
+preg_match("/<div[\w\s]class[\s]?=[\s]*\"depth\"[^>]*>/im", $bodyCat, $delimiter);	//set explode determine
+$splBody = explode($delimiter[0], $bodyCat);		//final explode, result paragraph : $sqlBody Array[1]~[9]
+
+//etract 2nd category[1]
+preg_match_all("/ord\s*=\s*\"(\d{2})000000\"[^>]*>\s*<span[^>]*>(.*?)<\/span>/im", $bodyCat, $category2);
+
+$category['text'] =  $category2[2];
+$category['value']=  $category2[1];
+
+//etract 3nd category[1]
+preg_match_all("/ord\s*=\s*\"(\d{2})\d{2}0000\"[^>]*>\s*([^<]*?)<\/a>/im", $bodyCat, $category3);
+
+$cat2idx=0;
+$cat2name=$category['text'][$cat2idx];
+$result['chIdx'][0]=0;
+//category3[1]='3depth category value', category3['cat2'][1~163]='2depth category text'
+for ($i=0; $i <count($category3[1]); $i++) { 
+	$index=array_search($category3[1][$i], $category[value]);
+	$category3['cat2'][$i]=$category['text'][$index];
+
+	if($category3['cat2'][$i]!=$cat2name){
+		array_push($result['chIdx'], $i);
+		$cat2idx=0;
+		$cat2name=$category3['cat2'][$i];
+	}
+	// $spCat = $category['text'][$index];
+	// echo $spCat.$cat2idx."<br>";
+	// // echo $category['text'][$index].$cat2idx.$category3[2][$i]."<br>";
+	// $rseult[$spCat][$cat2idx]=$category3[2][$i];
+	// var_dump($cat2idx);
+	$cat2idx++;
+}
+
+//final result = $result
+$result['cat2']=$category3['cat2'];		//$result['cat2']=category2 text
+$result["cat3"]=$category3[2];				//$result['cat3']=category3 text
+
+echo "<xmp>";
+// print_r(array_search("브랜드패션", $result['cat2']));
+print_r($result);
+//print_r($category3);
+echo "</xmp>";
+
+/*make selectBox, category2-> category3*/
+//if input 브랜드패션, result = index [0]~[9]
+
+/*
+//output[print] $result
+echo "Second catalog 	Third catalog<br>";
+for ($i=0; $i < count($result['cat2']); $i++) { 
+	echo $result['cat2'][$i] . "\t" . "\t";
+	echo $result['cat3'][$i] . "<br>";
+}
+*/
+?>
+
+<script>
+function selectbox(value){
+	document.cookie="selBoxVal="+value;
+}
+</script>
+
+<select name="scCat" onchange="selectbox(value)" style="width: 200px;" >
+	<?php
+		foreach ($category['text'] as $key => $value) {
+			echo "<option value=\"".$category['value'][$key]."\">".$category['text'][$key]."</option>";
+		}
+	?>
+</select><br>
+<select name="thCat" style="width: 200px;">
+	<?php
+		for ($i=0; $i < count($category3[1]); $i++) {
+			$value = $_COOKIE['selBoxVal'];
+			var_dump($value);
+			if($value==$category3[1][$i]){
+				echo "<option value=\"".$category['cat3'][$i]."\">".$result['cat3'][$i]."</option>";
+			}
+		}
+	?>
+</select>
+
