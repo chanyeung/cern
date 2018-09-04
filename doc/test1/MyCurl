@@ -1,0 +1,35 @@
+<?php
+class MyCurl{
+	private $ch;
+	private $response;
+	
+	function __construct($ch){
+		$this->ch = curl_init($ch);
+		$this->setOpt();
+		$this->exec();
+		curl_close($this->ch);
+	}
+
+	function setOpt(){
+		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($this->ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($this->ch, CURLOPT_HEADER, 1);
+	}
+
+	function exec(){
+		$this->response = curl_exec($this->ch);
+		if(curl_errno($this->ch)!=0){
+			echo 'cURL eroor = ' . curl_error($this->ch);
+			exit;
+		}
+	}
+
+	function getCh(){
+		return $this->ch;
+	}
+
+	function getResponse(){
+		return $this->response;
+	}
+}
+?>
