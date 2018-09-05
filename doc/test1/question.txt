@@ -1,0 +1,53 @@
+Q read json file php?
+A
+.json file
+  {
+    "John": {
+        "status":"Wait"
+    },
+    "Jennifer": {
+        "status":"Active"
+    },
+    "James": {
+        "status":"Active",
+        "age":56,
+        "count":10,
+        "progress":0.0029857,
+        "bad":0
+    }
+}
+
+<?php
+$string = file_get_contents("/home/michael/test.json");
+$json_a = json_decode($string, true);
+
+echo $json_a['John'][status];
+echo $json_a['Jennifer'][status];
+?>
+
+========================reply===============================
+To iterate over a multidimensional array, you can use RecursiveArrayIterator
+
+$jsonIterator = new RecursiveIteratorIterator(
+    new RecursiveArrayIterator(json_decode($json, TRUE)),
+    RecursiveIteratorIterator::SELF_FIRST);
+
+foreach ($jsonIterator as $key => $val) {
+    if(is_array($val)) {
+        echo "$key:\n";
+    } else {
+        echo "$key => $val\n";
+    }
+}
+
+===================================output
+John:
+status => Wait
+Jennifer:
+status => Active
+James:
+status => Active
+age => 56
+count => 10
+progress => 0.0029857
+bad => 0
