@@ -1,0 +1,422 @@
+http://xshine.tistory.com/251
+
+cURL (Client URL Library Functions)
+제작자 Daniel Stenberg 의 설명을 그대로 변역하면
+curl is a comand line tool for transferring files with URL syntax
+커맨드라인에서 URL 문법을 사용하여 파일을 전송 프로그램
+내가 원하는 주소의 페이지에서 내가 임의의 값을 넣고 그 넣은 값으로 페이지에서 리턴되는 값을 받아오는 역할을 한다.
+PHP에서 cURL을 사용하려는 사람들 대부분이 아마도 HTTPS 접속 때문일 것이다.
+소켓 또는 그 외 여러가지 접속방법이 있는데 굳이 cURL을 사용하는 건 속도면에서도 빠르고 HTTPS도 쉽게 접속할 수 있기 때문이다.
+cURL 모듈을 서버에 설치해야 합니다.(리눅스 - curl.so, 윈도우 - php_curl.dll 확장모듈 필요)
+cURL로 가능한 일
+
+HTTPS certificates
+HTTP POST
+HTTP PUT
+FTP upload
+HTTP Form
+cookie
+authentication
+cURL, Client URL Library Functions
+
+curl_init : 세션 초기화, 핸들값 리턴
+curl_setopt : 옵션 세팅
+curl_exec : curl을 실행
+curl_errno : 에러번호를 가져온다.
+curl_error : 에러 메시지를 가져온다.
+curl_getinfo : 상태 정보를 리턴한다.
+curl_close : curl 세션을 닫는다
+[예제1 : POST방식으로 데이터 전송(simple)]
+
+<?
+$post_data = array(
+"name" => "홍길동",
+"birthday" => "1980-08-20"
+);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, http://www.example.com);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+curl_exec($ch);
+?>
+
+[예제2: POST방식으로 데이터 전송(function)]
+
+<?
+function fetch_page($url,$param,$cookies,$referer_url){
+if(strlen(trim($referer_url)) == 0) $referer_url= $url; 
+$curlsession = curl_init ();
+curl_setopt ($curlsession, CURLOPT_URL, \"$url\");
+curl_setopt ($curlsession, CURLOPT_POST, 1);
+curl_setopt ($curlsession, CURLOPT_POSTFIELDS, \"$param\");
+curl_setopt ($curlsession, CURLOPT_POSTFIELDSIZE, 0);
+curl_setopt ($curlsession, CURLOPT_TIMEOUT, 60);
+if($cookies && $cookies!=\"\"){
+curl_setopt ($curlsession, CURLOPT_COOKIE, \"$cookies\");
+}
+curl_setopt ($curlsession, CURLOPT_HEADER, 1); //헤더값을 가져오기위해 사용합니다. 쿠키를 가져오려고요.
+curl_setopt ($curlsession, CURLOPT_USERAGENT, \"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)\");
+curl_setopt ($curlsession, CURLOPT_REFERER, \"$referer_url\"); 
+ob_start();
+$res = curl_exec ($curlsession);
+$buffer = ob_get_contents();
+ob_end_clean();
+if (!$buffer) {
+$returnVal = \"Curl Fetch Error : \".curl_error($curlsession);
+}else{
+$returnVal = $buffer;
+} 
+curl_close($curlsession); 
+return $returnVal;
+} 
+?>
+
+[예제3 : 파일 전송]
+
+<?
+$post_data['data[0]'] = "@image/img_01.jpg";
+$post_data['data[0]'] = "@image/img_02.jpg";
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, http://www.example.com/upload.php);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+$postResult = curl_exec($ch);
+?>
+[예제4 : https 접속]
+
+<?
+$ch = curl_init();
+curl_setopt ($ch, CURLOPT_URL,"https://www.test.com"); //접속할 URL 주소
+curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // 인증서 체크같은데 true 시 안되는 경우가 많다.
+// default 값이 true 이기때문에 이부분을 조심 (https 접속시에 필요)
+curl_setopt ($ch, CURLOPT_SSLVERSION,3); // SSL 버젼 (https 접속시에 필요)
+curl_setopt ($ch, CURLOPT_HEADER, 0); // 헤더 출력 여부
+curl_setopt ($ch, CURLOPT_POST, 1); // Post Get 접속 여부
+curl_setopt ($ch, CURLOPT_POSTFIELDS, "var1=str1&var2=str2"); // Post 값 Get 방식처럼적는다.
+curl_setopt ($ch, CURLOPT_TIMEOUT, 30); // TimeOut 값
+curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1); // 결과값을 받을것인지
+$result = curl_exec ($ch);
+curl_close ($ch);
+echo $result;
+?>
+[예제5 : curl을 이용한 Gmail 로그인]
+
+$src = "https://".$gmailId.":".$gmailPw."@mail.google.com/mail/feed/atom";
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt ($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_POST,true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_USERAGENT, 'My Agent Name');
+curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
+$res = curl_exec($ch);
+curl_close($ch);
+/** 결과는 Atom xml 형식이다. DOM 또는 xml 파싱 function을 이용해서 파싱하면 됩니다. **/
+echo $res;
+?>
+
+[예제6 : cURL을 이용한 웹페이지 가져오기]
+
+<?php
+function get_content($url) {
+$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)';
+$curlsession = curl_init ();
+curl_setopt ($curlsession, CURLOPT_URL, $url);
+curl_setopt ($curlsession, CURLOPT_HEADER, 0);
+curl_setopt ($curlsession, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt ($curlsession, CURLOPT_POST, 0);
+curl_setopt ($curlsession, CURLOPT_USERAGENT, $agent);
+curl_setopt ($curlsession, CURLOPT_REFERER, "");
+curl_setopt ($curlsession, CURLOPT_TIMEOUT, 3);
+$buffer = curl_exec ($curlsession);
+$cinfo = curl_getinfo($curlsession);
+curl_close($curlsession);
+if ($cinfo['http_code'] != 200)
+{
+return "";
+}
+return $buffer;
+}
+?>
+
+curl_close
+기능 : cURL 세션을 닫는다.
+구문 : curl_close(resource ch)
+cURL 세션을 닫고, 리소스를 비워준다. 또한 cURL 핸들은 삭제된다.
+기능 : 마지막 에러 번호를 리턴해 준다.
+구문 : curl_errno(resource ch)
+만일 연산 후 어떠한 에러도 발행하지 않았다면 0(zero)을 리턴한다.
+Error Code
+
+There exists a bunch of different error codes and their corresponding error messages that may appear during bad conditions. At the time of this writing, the exit codes are:
+
+1 - Unsupported protocol. This build of curl has no support for this protocol.
+
+2 - Failed to initialize.
+
+3 - URL malformat. The syntax was not correct. 
+잘못된 형식의 도메인
+
+5 - Couldn't resolve proxy. The given proxy host could not be resolved.
+
+6 - Couldn't resolve host. The given remote host was not resolved. 
+해당 도메인을 못찾는다는 뜻
+네임서버가 제대로 등록되어 있는지 확인하고 도메인도 정확한지 확인할 것.
+
+7 - Failed to connect to host.
+
+8 - FTP weird server reply. The server sent data curl couldn't parse.
+
+9 - FTP access denied. The server denied login or denied access to the particular resource or directory you wanted to reach. Most often you tried to change to a directory that doesn't exist on the server.
+
+11 - FTP weird PASS reply. Curl couldn't parse the reply sent to the PASS request.
+
+13 - FTP weird PASV reply, Curl couldn't parse the reply sent to the PASV request.
+
+14 - FTP weird 227 format. Curl couldn't parse the 227-line the server sent.
+
+15 - FTP can't get host. Couldn't resolve the host IP we got in the 227-line.
+
+17 - FTP couldn't set binary. Couldn't change transfer method to binary.
+
+18 - Partial file. Only a part of the file was transferred.
+
+19 - FTP couldn't download/access the given file, the RETR (or similar) command failed.
+
+21 - FTP quote error. A quote command returned error from the server.
+
+22 - HTTP page not retrieved. The requested url was not found or returned another error with the HTTP error code being 400 or above. This return code only appears if -f/--fail is used.
+
+23 - Write error. Curl couldn't write data to a local filesystem or similar.
+
+25 - FTP couldn't STOR file. The server denied the STOR operation, used for FTP uploading.
+
+26 - Read error. Various reading problems.
+
+27 - Out of memory. A memory allocation request failed.
+
+28 - Operation timeout. The specified time-out period was reached according to the conditions.
+
+30 - FTP PORT failed. The PORT command failed. Not all FTP servers support the PORT command, try doing a transfer using PASV instead!
+
+31 - FTP couldn't use REST. The REST command failed. This command is used for resumed FTP transfers.
+
+33 - HTTP range error. The range "command" didn't work.
+
+34 - HTTP post error. Internal post-request generation error.
+
+35 - SSL connect error. The SSL handshaking failed.
+
+36 - FTP bad download resume. Couldn't continue an earlier aborted download.
+
+37 - FILE couldn't read file. Failed to open the file. Permissions?
+
+38 - LDAP cannot bind. LDAP bind operation failed.
+
+39 - LDAP search failed.
+
+41 - Function not found. A required LDAP function was not found.
+
+42 - Aborted by callback. An application told curl to abort the operation.
+
+43 - Internal error. A function was called with a bad parameter.
+
+45 - Interface error. A specified outgoing interface could not be used.
+
+47 - Too many redirects. When following redirects, curl hit the maximum amount.
+
+48 - Unknown TELNET option specified.
+
+49 - Malformed telnet option.
+
+51 - The peer's SSL certificate or SSH MD5 fingerprint was not ok
+에러 메시지) SSL: certificate subject name 'www.test.co.kr' does not match target host name 'test.co.kr'
+해결1) 인증서 발급받은 주소로 호출하거나
+해결2) 설정으로 제어
+
+$soapClient->setOpt('curl', CURLOPT_SSL_VERIFYHOST, 0);
+
+52 - The server didn't reply anything, which here is considered an error.
+
+53 - SSL crypto engine not found
+
+54 - Cannot set SSL crypto engine as default
+
+55 - Failed sending network data
+
+56 - Failure in receiving network data
+
+58 - Problem with the local certificate
+
+59 - Couldn't use specified SSL cipher
+
+60 - Peer certificate cannot be authenticated with known CA certificates
+인증서 신뢰 검증에 실패한 경우다. (통합인증서, 번들과 관련 있는 듯)
+에러 메시지) SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+해결) 신뢰 검증을 하지 않도록 설정.
+상호 서버가 신뢰된다면 굳이 신뢰성을 검증하지 않아도 된다.
+$soapClient->setOpt('curl', CURLOPT_SSL_VERIFYPEER, 0);
+
+61 - Unrecognized transfer encoding
+
+62 - Invalid LDAP URL
+
+63 - Maximum file size exceeded
+
+64 - Requested FTP SSL level failed
+
+65 - Sending the data requires a rewind that failed
+
+66 - Failed to initialise SSL Engine
+
+67 - User, password or similar was not accepted and curl failed to login
+
+68 - File not found on TFTP server
+
+69 - Permission problem on TFTP server
+
+70 - Out of disk space on TFTP server
+
+71 - Illegal TFTP operation
+
+72 - Unknown TFTP transfer ID
+
+73 - File already exists (TFTP)
+
+74 - No such user (TFTP)
+
+75 - Character conversion failed
+
+76 - Character conversion functions required
+
+77 - Problem with reading the SSL CA cert (path? access rights?)
+
+78 - The resource referenced in the URL does not exist
+
+79 - An unspecified error occurred during the SSH session
+
+80 - Failed to shut down the SSL connection
+
+XX - There will appear more error codes here in future releases. The existing ones are meant to never change
+
+curl_error
+
+기능 : 그 현재의 세션에 대한 마지막 에러 메시지를 되돌려 준다.
+구문 : curl_error(resource ch)
+만일 cURL 연산 후 에러를 발생하면 에러메시지를 되돌려 주며, 에러가 발생하지 않으면 빈문자열을 되돌려 준다.
+curl_init
+
+기능 : 세션을 초기화하고 curl_setopt(), curl_exec() 그리고 curl_close 함수들과 함께 사용하기 위해 CURL 핸들값을 리턴해준다.
+구문 : resource curl_init([string $url])
+옵션 Url 매개변수가 포함되어 있다면 CURLOPT_URL 옵션은 매개변수의 값을 셋팅할 것이다.
+curl_setopt()를 이용하여 셋팅할 수 있다.
+리턴 : 핸들값 or False
+예제 : 새로운 curl세션을 초기화하고 웹페이지를 페칭한다.
+<?php
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "http://www.example.com/");
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_exec($ch);
+curl_close($ch);
+?>
+curl_exec
+
+기능 : 세션을 싱행한다.
+구문 : curl_exec(resource ch)
+이 함수는 cURL 세션을 초기화하고 세션의 옵션들을 셋팅한 후에 불려져야만 한다.
+본 함수의 목적은 단순히 미리 정의된 cURL 세션을 실행하기 위한 것이기 때문이다.
+curl_getinfo
+
+기능 : 특정 전송에 대한 정보를 받는다.
+구문 : crul_getinfo(resource ch [, int opt])
+
+
+curl_setopt
+
+CURLOPT_FOLLOWLOCATION
+
+TRUE to follow any "Location: " header that the server sends as part of the HTTP header (note this is recursive, PHP will follow as many "Location: " headers that it is sent, unless CURLOPT_MAXREDIRS is set).
+FOLLOWLOCATION 옵션 설정. 위치 헤더가 존재하면 따라간다.
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, tru
+
+CURLOPT_HEADER
+
+TRUE to include the header in the output.
+헤더 정보를 받기 원한다면 이 옵션을 추가한다.
+VALUE : 1 OR true
+curl_setopt($ch, CURLOPT_HEADER, false);
+
+CURLOPT_NOBODY
+TRUE to exclude the body from the output.
+본문의 정보를 받기 원하지 않는다면 이 옵션을 추가한다.
+
+
+CURLOPT_POST
+TRUE to do a regular HTTP POST. This POST is the normal application/x-www-form-urlencoded kind, most commonly used by HTML forms.
+전송 메소드를 설정한다.
+VALUE : 1-POST, 0-GET
+curl_setopt($ch, CURLOPT_POST,1);
+
+
+CURLOPT_RETURNTRANSFER
+TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it out directly.
+REQUEST 에 대한 결과값을 받을 건지 체크
+(WRITERUNCTION 콜백을 사용하는 대신, curl_exec 함수을 위한 반환 값으로 원격지 내용을 받는다.)
+#Resource ID 형태로 넘어옴 :: 내장 함수 curl_errno 로 체크
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+
+
+CURLOPT_SSL_VERIFYPEER
+FALSE to stop cURL from verifying the peer's certificate. Alternate certificates to verify against can be specified with the CURLOPT_CAINFO option or a certificate directory can be specified with the CURLOPT_CAPATH option. CURLOPT_SSL_VERIFYHOST may also need to be TRUE or FALSE if CURLOPT_SSL_VERIFYPEER is disabled (it defaults to 2).
+인증서 체크같은데 true 시 안되는 경우가 많다.
+default 값이 true 이기때문에 이 부분을 조심 (https 접속시에 필요)
+curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+
+CURLOPT_PORT
+An alternative port number to connect to.
+
+
+CURLOPT_SSLVERSION
+The SSL version (2 or 3) to use. By default PHP will try to determine this itself, although in some cases this must be set manually.
+SSL 버젼 (https 접속시에 필요)
+curl_setopt ($ch, CURLOPT_SSLVERSION,3);
+
+CURLOPT_TIMEOUT
+The maximum number of seconds to allow cURL functions to execute.
+REQUEST 에 대한 결과값을 받는 시간타임 설정한다.
+curl_setopt($ch, CURLOPT_TIMEOUT,100);
+
+
+CURLOPT_POSTFIELDS
+The full data to post in a HTTP "POST" operation. To post a file, prepend a filename with @ and use the full path.
+POST 메소드라면 파라미터 값들을 이 옵션에 정의하면 된다.
+curl_setopt($cu, CURLOPT_POSTFIELDS,$vars); // 보낼 데이타 형식은 GET 방식으로 설정
+ex) $vars = "arg=$arg1&arg2=$arg2&arg3=$arg3";
+
+
+CURLOPT_REFERER
+The contents of the "Referer: " header to be used in a HTTP request.
+리퍼러 정보를 설정
+
+
+CURLOPT_URL
+The URL to fetch. This can also be set when initializing a session with curl_init().
+접속할 url정보를 설정
+curl_init()에서 url를 설정하면 별도 설정이 필요없다.
+curl_setopt($ch, CURLOPT_URL, 'http://www.exsample.com');
+
+
+CURLOPT_USERAGENT
+The contents of the "User-Agent: " header to be used in a HTTP request.
+에이전트 정보를 설정
+curl_setopt($ch, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"); 
+
+
+
+출처: http://xshine.tistory.com/251 [메모하는습관]
