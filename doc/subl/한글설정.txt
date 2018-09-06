@@ -1,0 +1,114 @@
+http://blog.1day1.org/499
+
+
+sublime text 3 에서 한글써보기 2번째
+
+  => 지난 글에서는  ibus 를 사용하는 방법이었다.
+
+그러나 미해결 부분도 있고, 뭔가 꼼수같아 보였다.
+
+그러던 차에 unity 쪽의 문제인지 ibus 쪽의 문제인지 모르겠지만, 사용하다가 어떤 이유에 의해 데스크탑환경이 이상해지는 현상때문에 ibus 의 한영전환이 꺼지는(?) 문제가 있었다.
+
+그래서 다른 입력툴을 찾았는데 nabi 와 fcitx 를 테스트 해봤다.
+
+nabi 는 unity 에서 tray 에 넣는 방법이 복잡해보여 일단 패스하고 fcitx 를 사용하는 방법을 정리한다.(추후 nabi 도 테스트 해볼지는 모르겠다)
+
+
+
+# sublime text 3 설치
+
+자세한 것은 생략. 아직 베타이긴 하지만, 그냥 써도 될만큼 안정화 된 듯 하다. 2 보다 빠르니 3로 설치하는게 좋을 듯 함.
+
+http://www.sublimetext.com/3 에서 배포판에 맞는 파일을 다운받아 설치(압축해제) 하면 된다.
+
+ubuntu 64bit 버전을 다운받았다.
+http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3059_x64.tar.bz2
+
+적당한 곳에 압축을 풀고 PATH 를 지정해주면 된다.
+
+~/bin 폴더에 symbolic link 를 해주면 편하다.
+
+ln -s  {설치폴더}/sublime_text ~/bin/sub
+
+터미널에서  sub file.txt  형태로 바로 열수 있다.
+
+
+
+# fcitx 설치
+
+apt-get install fcitx-hangul
+
+만 해주면 추가되는 패키지는 알아서 같이 설치해준다.
+
+기본 패키지가 살짝 버전이 낮아서 다음 저장소의 패키지를 사용한다.
+https://launchpad.net/~createsc/+archive/3beol/?field.series_filter=raring
+
+sudo add-apt-repository ppa:createsc/3beol
+sudo apt-get update
+sudo apt-get install fcitx fcitx-hangul
+
+
+
+# sublime text 3 에서 한글입력이 가능하도록 처리 (sublime-text-imfix 사용)
+
+1. https://github.com/lyfeyaj/sublime-text-imfix 에서 소스를 다운 받는다.
+
+git clone https://github.com/lyfeyaj/sublime-text-imfix.git
+
+   다운받은 다음 위치 sublime-text-imfix/src 파일 내에 sublime-imfix.c 를 컴파일 하면 된다.
+
+  - 컴파일 사전 준비
+
+    # sudo apt-get install build-essential  libgtk2.0-dev
+
+ - 컴파일
+
+# gcc -shared -o libsublime-imfix.so sublime-imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC
+
+위 libgtk2.0-dev 를 설치하지 않으면 다음과 같은 에러가 발생한다.
+
+Package gtk+-2.0 was not found in the pkg-config search path.
+Perhaps you should add the directory containing `gtk+-2.0.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'gtk+-2.0' found
+sublime-imfix.c:9:21: fatal error: gtk/gtk.h: 그런 파일이나 디렉터리가 없습니다
+#include <gtk/gtk.h>
+                     ^
+compilation terminated.
+
+2. 컴파일이 어려우면 git clone 위치에 lib 에 컴파일된 버전이 있다. 그것을 사용해도 된다.
+
+
+위 핵심은 libsublime-imfix.so 를 먼저 로딩후에 sublime text 3 를 실행시키는 것이다.
+
+
+관련 스크립트를 다음과 같이 만들면 된다.
+
+$ cat sublimetext3fcitx 
+
+
+#!/bin/bash
+export LD_PRELOAD=/opt/sublime_text_3/lib/libsublime-imfix.so
+exec /opt/sublime_text_3/sublime_text "$@"
+
+sublime text 의 위치는 본인이 설치한 위치로 지정하면 된다.
+
+
+
+# unity dock 에 넣는 것은 다음을 참조 (http://blog.1day1.org/486)
+
+파일내용을 다음과 같이 했다. ( $ cat sublime_text.desktop )
+
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Sublime Text 3
+Icon=sublime_text.png
+Exec=/opt/sublime_text_3/sublimetext3fcitx
+StartupNotify=false
+StartupWMClass=Sublime_text
+OnlyShowIn=Unity;
+X-UnityGenerated=true
+
+위 파일을 unity panel (dock?) 에 넣고 실행시켜보면 ST3 가 뜬다. 한영전환 / 한글입력이 잘 되는지 확인해본다.
