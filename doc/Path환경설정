@@ -1,0 +1,53 @@
+PATH=$PATH:/home:/var:/snap/bin:/usr/local/bin
+
+http://woongheelee.com/entry/%EC%9A%B0%EB%B6%84%ED%88%AC%EC%97%90%EC%84%9C-path-%EC%84%A4%EC%A0%95%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%95%84%EB%A7%88-%EB%A6%AC%EB%88%85%EC%8A%A4-%EC%9D%BC%EB%B0%98%EC%A0%81%EC%9D%B8-%EB%B0%A9%EB%B2%95
+
+터미널에서
+
+
+
+$ sudo gedit ~/.bashrc
+
+
+
+하시고, 스크롤을 돌려서 가장 아래에 다음과 같이 PATH를 추가해줍니다.
+
+
+
+PATH=$PATH:/home:/var
+
+
+
+/home 이나 /var 에 추가하시려는 PATH를 입력하시면 되겠죠.
+
+
+
+재부팅해서
+
+
+
+$ echo $PATH
+
+
+
+로 확인 가능합니다.
+
+
+
+(2016년 9월 6일에 추가)
+
+
+
+재부팅 하지 않고
+
+
+$ source ~/.bashrc
+
+
+
+
+하면 path가 바로 추가됩니다.
+
+
+
+출처: http://woongheelee.com/entry/우분투에서-path-설정하는-방법아마-리눅스-일반적인-방법 [노트정리]
