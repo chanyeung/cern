@@ -1,0 +1,5 @@
+GRANT ALL PRIVILEGES ON pcy_db.guestbook TO 'user01'@'localhost';
+
+insert into guestbook (name, email, passwd, content, post_date) values ('kim', 'kim@nate.com', '1234', '방명록....', now());
+
+create table guestbook( idx int not null auto_increment primary key, name varchar(50) not null, email varchar(50) not null, passwd varchar(50) not null, content text, post_date datetime );
