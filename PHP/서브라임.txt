@@ -1,0 +1,5 @@
+-폰트 수정
+setting user
+"font_face":"Verdana",
+
+-
