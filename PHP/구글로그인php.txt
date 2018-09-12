@@ -1,0 +1,55 @@
+<?php
+$email = '';
+$pass = '';
+
+$config['file'] = substr(strrchr($_SERVER['SCRIPT_FILENAME'], '/'), 1);
+$config['cookie_file'] = str_replace('.php','_cookie.txt',$config['file']);
+$fp = @fopen($config['cookie_file'],'w');
+@fwrite($fp,'');
+@fclose($fp);
+
+function query($data=array(),$fields=array()){
+       foreach($data as $k=>$v)
+               $fields[]=$k.'='.urlencode($v);
+       return implode('&',$fields);
+}
+
+function curl($url,$post=null,$headers=null){
+    global $config;
+       $ch=curl_init();
+       curl_setopt($ch,CURLOPT_URL,$url);
+       if(is_array($post)){
+               curl_setopt($ch,CURLOPT_POST,true);
+               curl_setopt($ch,CURLOPT_POSTFIELDS,query($post));
+       }
+       if(is_array($headers))
+               curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);
+       curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+       curl_setopt($ch, CURLOPT_COOKIEJAR, $config['cookie_file']);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $config['cookie_file']);
+       curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+       curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+       $data=curl_exec($ch) or curl_error($ch);
+       curl_close($ch);
+       return $data;
+}
+$earn = 0;
+//google.com/adsense/
+$r = curl('https://www.google.com/accounts/ServiceLogin');
+@preg_match('#name="GALX"(.*?) />#s',$r,$galx);
+@preg_match('#value="(.*?)"#s',$galx[1],$galx);
+@preg_match('#name="dsh" id="dsh"(.*?) />#s',$r,$dsh);
+@preg_match('#value="(.*?)"#s',$dsh[1],$dsh);
+$r = curl('https://www.google.com/accounts/ServiceLoginAuth',array('dsh'=>$dsh[1],'GALX'=>$galx[1],'Email'=>$email,'Passwd'=>$pass,'PersistentCookie'=>1,'asts'=>'','submit'=>'Sign in','continue'=>'https://www.google.com/adsense/login-box-gaiaauth','followup'=>'https://www.google.com/adsense/login-box-gaiaauth','service'=>'adsense'));
+$r = curl('https://www.google.com/accounts/ServiceLogin?service=adsense&rm=hide&alwf=true&passive=true&continue=https://www.google.com/adsense/login-box-gaiaauth&followup=https://www.google.com/adsense/login-box-gaiaauth');
+// Get $ of each Channel
+$channel = array('myadsensechannel','anotherchannel');
+foreach($channel as $chn){
+    @preg_match('#'.$chn.'</a>(.*?)</tr>#s',$r,$sms);
+    @preg_match_all('#>\$(.*?)</td>#s',$sms[1],$sms);
+    $earn = $earn + floatval($sms[1][1]);
+}
+//google.com/adsense/
+echo $earn;
+?>
