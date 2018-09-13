@@ -1,0 +1,7 @@
+cd /home/pcy/www/html
+wget https://codeload.github.com/bcit-ci/CodeIgniter/zip/3.0.6
+unzip 3.0.6
+mv CodeIgniter3.0.6/* .                       코드이그나이터 디렉토리 안의 내용을 현재 티렉터리로 이동한다
+rm -r 3.0.6
+rm -r CodeIgniter3.0.6
+
