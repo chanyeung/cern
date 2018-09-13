@@ -1,0 +1,41 @@
+토큰값[새로 생성되는]과 pass[고정값]이 결합하여 암호화, hash sha512되어 바뀌는 비번
+fe0468680d4f90bf7446e49a3c9100b490a8db06df47588320921a36f0b92703dc7284797bb391a766cbec7c92a9cffa7d1b535c7aa4d345788d0153a93a1ee6
+fe0468680d4f90bf7446e49a3c9100b490a8db06df47588320921a36f0b92703dc7284797bb391a766cbec7c92a9cffa7d1b535c7aa4d345788d0153a93a1ee6
+
+암호화 sh512관련 자료
+<?php
+header("Content-Type: text/html; charset=UTF-8");
+$id = 'tgubio';
+$p = '1111';
+echo "id       : " . $id . "<br><br>";
+echo "password : " . $p . "<br><br>";
+ 
+echo "<b>비밀번호 입력받고, 기존은 맞는지 확인 필요 md5($p)</b><br>";
+$md5 = md5($p);
+var_dump($md5);
+echo "<br><br>";
+ 
+#$sha256 = hash('sha256',$p);
+#var_dump($sha256);
+#echo "<b>sha256</b><br>";
+ 
+echo "<b>sha512 hash('sha512', $id.$p)</b><br>";
+$sha512 = hash('sha512',$id.$p);
+var_dump($sha512);
+echo "<br><br>";
+ 
+echo "----------------------------------------------------<br>";
+echo "<b>기존 - hash('sha512',$id.md5($md5))</b><br>";
+$md5sha512 = hash('sha512',$id.md5($md5));
+var_dump($md5sha512);
+echo "<br><br>";
+ 
+echo "<b>신규 - hash('sha512', $id.md5($p))</b><br>";
+$aa = hash('sha512', $id.md5($p));
+var_dump($aa);
+echo "<br>";
+echo "---------------------------------------------------<br><br>";
+ 
+echo "<b>PHP >= 5.3 </b><br>";
+echo "openssl_digest(md5($p), 'sha512')<br>" . openssl_digest(md5($p), 'sha512') . "<br><br>";
+echo "openssl_digest(md5($md5), 'sha512')<br>" . openssl_digest(md5($md5), 'sha512') . "<br>";
