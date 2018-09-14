@@ -1,0 +1,22 @@
+Q
+how to get the cookies from a php curl into a variable
+A
+$ch = curl_init('http://www.google.com/');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// get headers too with this line
+curl_setopt($ch, CURLOPT_HEADER, 1);
+$result = curl_exec($ch);
+// get cookie
+// multi-cookie variant contributed by @Combuster in comments
+preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $result, $matches);
+$cookies = array();
+foreach($matches[1] as $item) {
+    parse_str($item, $cookie);
+    $cookies = array_merge($cookies, $cookie);
+}
+var_dump($cookies);
+
+
+Q
+쿠키의 목적과 사용형식
+https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies
