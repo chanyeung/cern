@@ -1,0 +1,131 @@
+로컬  사용자
+CREATE USER 'local_user01'@'localhost' IDENTIFIED BY 'pcy621';
+CREATE USER 'local_user02'@'localhost' IDENTIFIED BY 'pcy621';
+CREATE USER 'local_user03'@'localhost' IDENTIFIED BY 'pcy621';
+
+원격 사용자
+CREATE USER 'remote_user01'@'%' IDENTIFIED BY 'pcy621';
+CREATE USER 'remote_user02'@'%' IDENTIFIED BY 'pcy621';
+CREATE USER 'remote_user03'@'%' IDENTIFIED BY 'pcy621';
+
+CREATE USER 'user127001'@'127.0.0.1' IDENTIFIED BY 'pcy621';
+
+
+권한 설정
+
+GRANT ALL PRIVILEGES ON pcy_db.study TO 'local_user01'@'localhost'; 
+GRANT ALL PRIVILEGES ON pcy_db.study TO 'user127001'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON pcy_db.study TO 'remote_user01'@'%';
+
+
+db생성
+create database pcy_db;
+
+테이블 만들기
+create table member(
+user_id varchar(50) primary key,
+atn varchar(255) not null,
+profile varchar(500),
+name varchar(50) not null,
+birth int(30),
+phone int(50) not null,
+email varchar(50),
+address varchar(200),
+grade varchar(15) not null,
+user_sex varchar(10),
+reg_date datetime not null DEFAULT CURRENT_TIMESTAMP,
+update_date datetime,
+valid_date int(30)
+);
+
+테이블 만들기
+create table diary(
+d_num bigint(50) unsigned AUTO_INCREMENT primary key,
+user_id varchar(50) not null,
+name varchar(50) not null,
+date datetime not null DEFAULT CURRENT_TIMESTAMP
+);
+
+테이블 만들기
+create table pt(
+pt_num bigint(50) unsigned AUTO_INCREMENT primary key,
+user_id varchar(50) not null,
+name varchar(50) not null,
+date datetime not null DEFAULT CURRENT_TIMESTAMP,
+pt_muscle varchar(30),
+pt_name varchar(200),
+pt_weight int(10) unsigned,
+pt_count int(10) unsigned,
+pt_root int(10) unsigned
+);
+
+테이블 만들기
+create table food(
+f_num bigint(50) unsigned AUTO_INCREMENT primary key,
+user_id varchar(50) not null,
+name varchar(50) not null,
+date datetime not null DEFAULT CURRENT_TIMESTAMP,
+f_gallery varchar(500) not null,
+f_name varchar(50) not null,
+f_callories int(10) unsigned
+);
+
+insert into study(user_id, user_pass, user_name, user_job, user_sex)
+values("hong02", "5641", "hong", "ceo", "male");
+values("hong01", "1268", "홍기리", "백수", "M");
+
+
+
+mysql> select Host, User, authentication_string, plugin from user;
++-----------+------------------+-------------------------------------------+-----------------------+
+| Host      | User             | authentication_string                     | plugin                |
++-----------+------------------+-------------------------------------------+-----------------------+
+| localhost | root             | *58A34D09831995C83CE8FC8C7E2F27DFFE83CB90 | auth_socket           |
+| localhost | mysql.session    | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+| localhost | mysql.sys        | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+| localhost | debian-sys-maint | *5911E6E702C603B2BB4136775161E197370D1048 | mysql_native_password |
+| localhost | local_user01     | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| localhost | local_user02     | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| localhost | local_user03     | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| %         | remote_user01    | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| %         | remote_user02    | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| %         | remote_user03    | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
+| 127.0.0.1 | user127001       | *78E513C3A10D95BF7B450FC349A08ABC3E6D7D6E | mysql_native_password |
++-----------+------------------+-------------------------------------------+-----------------------+
+
+
+mysql> describe study;
++-------------+---------------------+------+-----+-------------------+----------------+
+| Field       | Type                | Null | Key | Default           | Extra          |
++-------------+---------------------+------+-----+-------------------+----------------+
+| primary_key | bigint(20) unsigned | NO   | PRI | NULL              | auto_increment |
+| user_id     | varchar(30)         | NO   | UNI | NULL              |                |
+| user_pass   | varchar(255)        | NO   |     | NULL              |                |
+| user_name   | varchar(30)         | NO   |     | NULL              |                |
+| user_job    | varchar(50)         | NO   |     | NULL              |                |
+| user_sex    | varchar(10)         | NO   |     | NULL              |                |
+| reg_date    | datetime            | NO   |     | CURRENT_TIMESTAMP |                |
++-------------+---------------------+------+-----+-------------------+----------------+
+
+<ubuntu 우분투>
+-재시작 명령은 다음과 같이 합니다.
+​systemctl restart apache2
+-index.php편집
+cd /var/www/html
+vim index.php
+
+-PHP: Inserting Values from the Form into MySQL
+$sql = "INSERT INTO users (username, password, email)
+        VALUES (?,?,?)"
+$stmt = mysqli_prepare($conn,$sql);
+$stmt->bind_param("sss", $_POST['username'], $_POST['email'], $_POST['password']);
+$stmt->execute();
+
+<mysql>
+show tables
+SHOW TABLES LIKE '테이블명';
+SHOW TABLES IN 디비명 LIKE '테이블명';
+
+Q. php 암호화(encrypt) & 복호화(decrypt)
+string openssl_encrypt ( string $data , string $method , string $password [, int $options = 0 [, string $iv = "" ]] )
+string openssl_decrypt ( string $data , string $method , string $password [, int $options = 0 [, string $iv = "" ]] )
