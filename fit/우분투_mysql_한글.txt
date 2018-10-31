@@ -1,0 +1,23 @@
+1. client 부분 아래에 추가
+
+[client]
+default-character-set = utf8
+※ client는 /etc/mysql/debian.cnf 파일에 존재
+ 
+2. mysqld 부분 아래에 추가
+[mysqld]
+init_connect = SET collation_connection = utf8_general_ci
+init_connect = SET NAMES utf8
+character-set-server = utf8
+collation-server = utf8_general_ci
+※ mysqld는 /etc/mysql/mysql.conf.d/mysqld.cnf 파일에 존재 
+
+3. mysqldump 부분 아래에 추가
+[mysqldump]
+default-character-set = utf8
+※ mysql은 /etc/mysql/conf.d/mysqldump.cnf 파일에 존재 
+
+4. mysql 부분 아래에 추가
+[mysql]
+default-character-set = utf8
+※ mysql은 /etc/mysql/conf.d/mysql.cnf 파일에 존재
