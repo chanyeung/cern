@@ -13,7 +13,9 @@ CREATE USER 'user127001'@'127.0.0.1' IDENTIFIED BY 'pcy621';
 
 권한 설정
 
-GRANT ALL PRIVILEGES ON pcy_db.study TO 'local_user01'@'localhost'; 
+GRANT ALL PRIVILEGES ON fit.member TO 'pcy'@'localhost';
+GRANT ALL PRIVILEGES ON fit.member TO 'pcy'@'localhost';
+GRANT ALL PRIVILEGES ON fit.member TO 'pcy'@'localhost';
 GRANT ALL PRIVILEGES ON pcy_db.study TO 'user127001'@'127.0.0.1';
 GRANT ALL PRIVILEGES ON pcy_db.study TO 'remote_user01'@'%';
 
